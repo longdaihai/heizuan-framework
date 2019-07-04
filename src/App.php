@@ -4,14 +4,15 @@
 // +------------------------------------------------------------
 namespace heizuan;
 
-// 注册自动加载
-spl_autoload_register('App::autoload', true, true);
+defined('MODULE') or define('MODULE', '');
 
-ComAction::startError();
+// 注册自动加载
+spl_autoload_register('heizuan\App::autoload', true, true);
 
 class App
 {
 	private static $load_arr  = [];
+
 	/**
 	 * 默认的控制器名
 	 * @var string
@@ -26,8 +27,8 @@ class App
 
 	/**
 	 * 初始化
-	 * @param string $class 类名
-	 * @return class 实例化类
+	 * @param string $class
+	 * @throws \Exception
 	 */
 	public static function instance($class = '') {
 		if($class != ''){
@@ -71,17 +72,15 @@ class App
 			return true;
 		}
 
+		//扩展类
 		$path = HZ_PATH . '/commonTools/' . $className . '.php';
-
 		if(substr($className, -10) == 'Controller'){
-
 			require_once HZ_PATH . MODULE . '/controller/' . $className . '.php';
-
-		}else {
-
+		}else{
 			if(is_file($path)) require_once $path;
 		}
 
 		return self::$load_arr[$className] = false;
 	}
 }
+
